@@ -1,8 +1,9 @@
 function Bullet(x, y, veloX, veloY) {
     this.pos = createVector(x, y);
     this.vel = createVector(veloX, veloY);
-    this.acc = createVector(0, 0);
-    this.radius = 0;
+    this.acc = createVector(0, 10);
+    this.radius = 1;
+
 
     //this.mag = mag();
     //this.heading = heading();
@@ -12,7 +13,7 @@ function Bullet(x, y, veloX, veloY) {
     }
 
     this.update = function () {
-        this.vel.add(this.acc);
+        //this.vel.add(this.acc);
         this.pos.add(this.vel);
 
         this.acc.mult(0);
@@ -21,14 +22,16 @@ function Bullet(x, y, veloX, veloY) {
 
 
     this.show = function () {
-        point(this.pos.x, this.pos.y);
+        stroke(255);
+        strokeWeight(8);
+        ellipse(this.pos.x, this.pos.y, this.radius, this.radius);
     }
 
-    this.intersects = function (object) {
+    this.intersects = function (obj) {
 
-        var d = dist(this.pos.x, this.pos.y, object.x, object.y);
+        var d = dist(this.pos.x, this.pos.y, obj.x, obj.y);
 
-        if (d < this.radius + object.radius) {
+        if (d < this.radius + obj.radius) {
 
             return true;
 

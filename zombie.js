@@ -22,9 +22,11 @@ function Zombie(x, y) {
     this.update = function () {
 
 
-
-        this.y += /*this.yspeed*/ +random(-0.5, 0.5);
-        this.x += this.xspeed + random(-0.5, 0.5);
+        fill(55, 51, 51);
+        noStroke();
+        ellipse(this.x, this.y, this.radius + 5, this.radius + 5);
+        this.y += this.yspeed /* +random(-0.5, 0.5)*/ ;
+        this.x += this.xspeed /*+ random(-0.5, 0.5)*/ ;
 
 
 
@@ -50,12 +52,12 @@ function Zombie(x, y) {
         }
 
     };
-    this.detectHero = function (object) {
+    this.detectHero = function (obj) {
 
-        var d = dist(this.x, this.y, object.x, object.y);
+        var d = dist(this.x, this.y, obj.x, obj.y);
 
 
-        if (d < this.radius + object.safe) {
+        if (d < this.radius + obj.safe / 2) {
 
             return true;
 
@@ -75,6 +77,21 @@ function Zombie(x, y) {
         if (this.y > hero.y) {
             return true;
         }
+    }
+
+    this.attack = function (hero) {
+
+        if (this.x > hero.x) {
+            this.moveLeft(0.5 + random(-1, 1));
+        } else {
+            this.moveRight(0.5 + random(-1, 1));
+        }
+        if (this.y > hero.y) {
+            this.moveUp(0.5 + random(-1, 1));
+        } else {
+            this.moveDown(0.5 + random(-1, 1));
+        }
+
     }
     this.moveRight = function (speedo) {
 
