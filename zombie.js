@@ -11,6 +11,7 @@ function Zombie(x, y) {
     this.g = random(255);
     this.b = random(255);
     this.radius = 20;
+    this.detected;
 
 
     this.display = function () {
@@ -19,15 +20,20 @@ function Zombie(x, y) {
         noStroke();
         ellipse(this.x, this.y, this.radius, this.radius);
     }
+    this.outOffScreen = function () {
+        if (x > width || this.y < 0 || this.y > height) {
+            return true;
+
+        }
+        return false;
+    }
     this.update = function () {
 
 
-        fill(55, 51, 51);
-        noStroke();
-        ellipse(this.x, this.y, this.radius + 5, this.radius + 5);
-        this.y += this.yspeed /* +random(-0.5, 0.5)*/ ;
-        this.x += this.xspeed /*+ random(-0.5, 0.5)*/ ;
-
+        if (!this.detected) {
+            this.y += this.yspeed  +random(-0.5, 0.5) ;
+            this.x += this.xspeed + random(-0.5, 0.5) ;
+        }
 
 
 
@@ -40,7 +46,7 @@ function Zombie(x, y) {
     }
     this.intersects = function (object) {
 
-        var d = dist(this.x, this.y, object.pos.x, object.pos.y);
+        var d = dist(this.x, this.y, object.x, object.y);
 
         if (d < this.radius + object.radius) {
 
@@ -58,26 +64,17 @@ function Zombie(x, y) {
 
 
         if (d < this.radius + obj.safe / 2) {
-
+            this.detected = true;
             return true;
 
         } else {
-
+            this.detected = false;
             return false;
         }
 
     };
 
-    this.moveToAttackX = function (hero) {
-        if (this.x > hero.x) {
-            return true;
-        }
-    }
-    this.moveToAttackY = function () {
-        if (this.y > hero.y) {
-            return true;
-        }
-    }
+
 
     this.attack = function (hero) {
 

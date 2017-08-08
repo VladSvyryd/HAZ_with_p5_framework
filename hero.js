@@ -15,9 +15,8 @@ function Hero(x, y, radius, safe) {
 
 
 
-
     this.display = function () {
-        this.displayClear();
+
         fill(this.r, this.g, this.b);
         noStroke();
         ellipse(this.x, this.y, this.radius, this.radius);
@@ -27,15 +26,7 @@ function Hero(x, y, radius, safe) {
         }
 
     }
-    this.displayClear = function () {
-        fill(51, 51, 51);
-        noStroke();
-        ellipse(this.x, this.y, this.radius + 5, this.radius + 5);
 
-
-
-        ellipse(this.x, this.y, this.safe + 5, this.safe + 5);
-    }
     this.check = function () {
         if (this.y >= height - this.radius) {
             this.y = height - this.radius;
@@ -107,8 +98,8 @@ function Hero(x, y, radius, safe) {
         fill(255, 0, 0, 20);
         ellipse(this.x, this.y, this.safe + random(-2, 2), this.safe + random(-2, 2));
     };
-    this.safeZoneIncrease = function () {
-        this.safe += 20;
+    this.safeZoneIncrease = function (size) {
+        this.safe += size;
     };
 
 }

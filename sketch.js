@@ -5,17 +5,18 @@ var bullets = [];
 var mouse1;
 var mouse2;
 var alive = true;
-var mag
+
 var count = 20;
 var ammo = []
 var magBuffer = [];
 var activeMagbuffer = [];
 var zombiesKilled = 0;
 
+
 function setup() {
  createCanvas(1200, 720);
  cursor(CROSS);
- background(51);
+
  //noCursor();
  hero = new Hero(width / 2, height / 2, 20, 80);
  zombieSetter(80);
@@ -24,6 +25,7 @@ function setup() {
  print(ammo.length);
  //angleMode(DEGREES);#
  ammoPacksOnScreen(5, 13);
+
 
 }
 
@@ -77,7 +79,7 @@ function fire() {
  var dirY = (lenY / l) * 12;
  if (ammo.length != 0) {
   //shotSound.play();
-  hero.safeZoneIncrease();
+  hero.safeZoneIncrease(20);
   var dsd = ammo.pop();
   dsd.pos = createVector(hero.x, hero.y);
   dsd.vel = createVector(dirX, dirY);
@@ -123,7 +125,7 @@ function zombieAtack() {
 
 
 
-// HeroPointer 
+// HeroPointer
 function pointer1() {
  // A vector that points to the mouse location
  var mouse = new p5.Vector(mouseX, mouseY);
@@ -224,6 +226,8 @@ var x = setInterval(function () {
 }, 10000);
 
 function draw() {
+ background(51);
+
  if (alive) {
 
   heroAction();
@@ -253,16 +257,13 @@ function draw() {
   <!-- DRAW BULLETS -->
   for (var b = 0; b < bullets.length; b++) {
 
+   if (bullets[b]) {
+    bullets[b].update();
+    bullets[b].show();
+    if (bullets[b].outOffScreen()) bullets.splice(b, 1);
 
-   bullets[b].update();
-   bullets[b].show();
-
-
-   if (bullets[b].pos.x < 0 || bullets[b].pos.x > width ||
-    bullets[b].pos.y < 0 || bullets[b].pos.y > height) {
-    bullets.splice(b, 1);
-    //print(bullets.length)
    }
+
   }
 
   //zombieAtack();
@@ -279,17 +280,14 @@ function draw() {
 
     zombies[a].update();
     zombies[a].display();
-    if (hero.intersects(zombies[a])) {
-     // print("killed");
-     //alive = false;
-    }
     if (zombies[a].detectHero(hero)) {
      zombies[a].attack(hero);
-     //print(zombies[a] + "attacking")
+     if (zombies[a].intersects(hero)) {
+      //print("killed");
+      //alive = false;
+     }
     }
-    if (zombies[a].x > width ||
-
-     zombies[a].y < 0 || zombies[a].y > height) {
+    if (zombies[a].outOffScreen()) {
      zombies.splice(a, 1);
      zombies.push(new Zombie(10 - random(width), random(height)));
     }
@@ -299,7 +297,7 @@ function draw() {
    for (var j = 0; j < bullets.length; j++) {
 
 
-    if (bullets[j] && a != j && zombies[a].intersects(bullets[j])) {
+    if (bullets[j] && a != j && bullets[j].intersects(zombies[a])) {
      // print("now");
      zombiesKilled += 1;
      zombies.splice(a, 1);
@@ -319,19 +317,19 @@ function draw() {
 /*
     stroke(255);
     line(hero.x, hero.y, mouseX, mouseY);
- 
+
     /*
     if(ball.x > width || ball.x < 0){
      ball.xspeed = ball.xspeed * -1;
-     
+
     }
     if(ball.y > height || ball.y < 0){
      ball.yspeed = ball.yspeed * -1;
-     
+
     }
     ball.x = ball.x + ball.xspeed;
     ball.y = ball.y + ball.yspeed;
-     
+
     */
 
 
