@@ -5,12 +5,13 @@ var bullets = [];
 var mouse1;
 var mouse2;
 var alive = true;
-
+var pause = false;
 var count = 20;
 var ammo = []
 var magBuffer = [];
 var activeMagbuffer = [];
 var zombiesKilled = 0;
+var timeCounter =0;
 
 
 function setup() {
@@ -24,11 +25,19 @@ function setup() {
  getAmmoOnStart(13);
  print(ammo.length);
  //angleMode(DEGREES);#
- ammoPacksOnScreen(5, 13);
-
-
+ //ammoPacksOnScreen(5, 13);
+var button = createButton("pause");
+button.mousePressed(pauseOn);
+var button1 = createButton("resume");
+button1.mousePressed(restart);
 }
 
+function pauseOn(){
+  pause = true;
+}
+function restart(){
+  pause = false;
+}
 
 //Set_A_Start_AmmoPacks_Amount
 function ammoPacksPreload(size) {
@@ -63,13 +72,13 @@ function getAmmoOnStart(bullet) {
   ammo.push(new Bullet(0, 0, 0, 0));
  }
 }
-/*
+
 //Sound Preload
 function preload() {
  shotSound = loadSound("sounds/FNP45.1.mp3");
  emptyMag = loadSound("sounds/Dry_Fire_006.mp3");
 }
-*/
+
 //  Fire the bullets by sending them from the AmmoArray into BulletsArray
 function fire() {
  var lenX = (mouseX - hero.x);
@@ -78,7 +87,7 @@ function fire() {
  var dirX = (lenX / l) * 12;
  var dirY = (lenY / l) * 12;
  if (ammo.length != 0) {
-  //shotSound.play();
+  shotSound.play();
   hero.safeZoneIncrease(20);
   var dsd = ammo.pop();
   dsd.pos = createVector(hero.x, hero.y);
@@ -86,8 +95,8 @@ function fire() {
   print(ammo.length);
   bullets.push(dsd);
  } else {
-  //emptyMag.setVolume(0.1);
-  //emptyMag.play();
+  emptyMag.setVolume(0.1);
+  emptyMag.play();
  }
 
 }
@@ -171,6 +180,25 @@ function makeyPressed() {
  }
 
 }
+/*function makeyPressed() {
+ //console.log(key);
+
+ if (keyIsDown(event)) {
+   var keyCode = event.keyCode;
+  switch(keyCode){
+    case 68:  //d
+      hero.moveRight(1.5);
+    break;
+    case 83:  //s
+        keyS = true;
+    break;
+    case 63:  //a
+        keyA = true;
+    break;
+ }
+}
+}*/
+
 
 /*
 switch(keyCode){
@@ -211,24 +239,49 @@ function heroAction() {
   hero.x = 0;
  }
 }
-
+///Just count a second of the game
+var timer = setInterval(function (){
+  timeCounter++;
+},1000);
 function textInfo() {
 
-
+textAlign(CENTER)
  textSize(32);
  fill(0);
  text("Kills:" +
   zombiesKilled, width - 150, 40);
- text("Rounds:" + ammo.length, width - 190, height - 40);
-}
-var x = setInterval(function () {
- print("sdad");
-}, 10000);
 
+ text("Rounds:" + ammo.length, width - 190, height - 40);
+ fill(255);
+
+ text("Still alive: " + timeCounter +" sec", width/2,40 );
+}
+
+
+  // Respawn an AmmoPacks
+var x = setInterval(function () {
+ respawn_of_AmmoPacks(2,13)
+}, 10000);
+function respawn_of_AmmoPacks(num,bullets){
+  for (var n = 0; n < num; n++) {
+   var x = random(width - 20);
+   var y = random(height - 20);
+   var amount = bullets;
+   var temp = magBuffer[n];
+   temp.x = x;
+   temp.y = y;
+   temp.quantity = amount;
+   activeMagbuffer.push(temp);
+  }
+}
+
+
+
+//ANIMATION HERE_ANIMATION HERE_ANIMATION HERE_ANIMATION HERE
 function draw() {
  background(51);
 
- if (alive) {
+ if (alive&&!pause) {
 
   heroAction();
   textInfo();
@@ -311,7 +364,7 @@ function draw() {
 
   }
 
- } else dieMenu();
+} //else dieMenu();             //Deathscreen after Zombie won
 
 }
 /*

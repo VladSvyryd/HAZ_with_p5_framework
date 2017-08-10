@@ -31,8 +31,8 @@ function Zombie(x, y) {
 
 
         if (!this.detected) {
-            this.y += this.yspeed  +random(-0.5, 0.5) ;
-            this.x += this.xspeed + random(-0.5, 0.5) ;
+            this.y += this.yspeed  +random(-0.2, 0.2) ;
+            this.x += this.xspeed + random(-0.2, 0.2) ;
         }
 
 
@@ -79,14 +79,14 @@ function Zombie(x, y) {
     this.attack = function (hero) {
 
         if (this.x > hero.x) {
-            this.moveLeft(0.5 + random(-1, 1));
+            this.moveLeft(0.5 + random(-0.5, 0.5));
         } else {
-            this.moveRight(0.5 + random(-1, 1));
+            this.moveRight(0.5 + random(-0.5, 0.5));
         }
         if (this.y > hero.y) {
-            this.moveUp(0.5 + random(-1, 1));
+            this.moveUp(0.5 + random(-0.5, 0.5));
         } else {
-            this.moveDown(0.5 + random(-1, 1));
+            this.moveDown(0.5 + random(-0.5, 0.5));
         }
 
     }
