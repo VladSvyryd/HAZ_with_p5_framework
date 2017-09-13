@@ -5,28 +5,40 @@ var bullets = [];
 var mouse1;
 var mouse2;
 var alive = true;
-var mag
+var pause = false;
 var count = 20;
 var ammo = []
 var magBuffer = [];
 var activeMagbuffer = [];
 var zombiesKilled = 0;
+var timeCounter =0;
+
 
 function setup() {
  createCanvas(1200, 720);
  cursor(CROSS);
- background(51);
+
  //noCursor();
  hero = new Hero(width / 2, height / 2, 20, 80);
- zombieSetter(80);
+ zombieSetter(120,400,random(0,0.05),0.5);
+ //zombieSetter(40,width+1100,-0.05,-0.5);
  ammoPacksPreload(5);
  getAmmoOnStart(13);
  print(ammo.length);
  //angleMode(DEGREES);#
- ammoPacksOnScreen(5, 13);
-
+ //ammoPacksOnScreen(5, 13);
+var button = createButton("pause");
+button.mousePressed(pauseOn);
+var button1 = createButton("resume");
+button1.mousePressed(restart);
 }
 
+function pauseOn(){
+  pause = true;
+}
+function restart(){
+  pause = false;
+}
 
 //Set_A_Start_AmmoPacks_Amount
 function ammoPacksPreload(size) {
@@ -49,9 +61,9 @@ function ammoPacksOnScreen(num, bullets) {
 }
 
 //Zombie_Amount_Setter
-function zombieSetter(amount) {
+function zombieSetter(amount,offset,yspeed,xspeed) {
  for (var i = 0; i < amount; i++) {
-  zombies[i] = new Zombie(100 - random(width), random(height));
+  zombies[i] = new Zombie(random(0,-offset), random(height),yspeed,xspeed);
 
  }
 }
@@ -61,13 +73,15 @@ function getAmmoOnStart(bullet) {
   ammo.push(new Bullet(0, 0, 0, 0));
  }
 }
+
+//Sound Preload/ /
 /*
-//Sound Preload
 function preload() {
  shotSound = loadSound("sounds/FNP45.1.mp3");
  emptyMag = loadSound("sounds/Dry_Fire_006.mp3");
 }
 */
+
 //  Fire the bullets by sending them from the AmmoArray into BulletsArray
 function fire() {
  var lenX = (mouseX - hero.x);
@@ -76,16 +90,16 @@ function fire() {
  var dirX = (lenX / l) * 12;
  var dirY = (lenY / l) * 12;
  if (ammo.length != 0) {
-  //shotSound.play();
-  hero.safeZoneIncrease();
+//  shotSound.play();
+  hero.safeZoneIncrease(20);
   var dsd = ammo.pop();
   dsd.pos = createVector(hero.x, hero.y);
   dsd.vel = createVector(dirX, dirY);
   print(ammo.length);
   bullets.push(dsd);
  } else {
-  //emptyMag.setVolume(0.1);
-  //emptyMag.play();
+  emptyMag.setVolume(0.1);
+  emptyMag.play();
  }
 
 }
@@ -123,7 +137,7 @@ function zombieAtack() {
 
 
 
-// HeroPointer 
+// HeroPointer
 function pointer1() {
  // A vector that points to the mouse location
  var mouse = new p5.Vector(mouseX, mouseY);
@@ -169,6 +183,25 @@ function makeyPressed() {
  }
 
 }
+/*function makeyPressed() {
+ //console.log(key);
+
+ if (keyIsDown(event)) {
+   var keyCode = event.keyCode;
+  switch(keyCode){
+    case 68:  //d
+      hero.moveRight(1.5);
+    break;
+    case 83:  //s
+        keyS = true;
+    break;
+    case 63:  //a
+        keyA = true;
+    break;
+ }
+}
+}*/
+
 
 /*
 switch(keyCode){
@@ -209,22 +242,49 @@ function heroAction() {
   hero.x = 0;
  }
 }
-
+///Just count a second of the game
+var timer = setInterval(function (){
+  timeCounter++;
+},1000);
 function textInfo() {
 
-
+textAlign(CENTER)
  textSize(32);
  fill(0);
  text("Kills:" +
   zombiesKilled, width - 150, 40);
- text("Rounds:" + ammo.length, width - 190, height - 40);
-}
-var x = setInterval(function () {
- print("sdad");
-}, 10000);
 
+ text("Rounds:" + ammo.length, width - 190, height - 40);
+ fill(255);
+
+ text("Still alive: " + timeCounter +" sec", width/2,40 );
+}
+
+
+  // Respawn an AmmoPacks
+var x = setInterval(function () {
+ respawn_of_AmmoPacks(2,13)
+}, 10000);
+function respawn_of_AmmoPacks(num,bullets){
+  for (var n = 0; n < num; n++) {
+   var x = random(width - 20);
+   var y = random(height - 20);
+   var amount = bullets;
+   var temp = magBuffer[n];
+   temp.x = x;
+   temp.y = y;
+   temp.quantity = amount;
+   activeMagbuffer.push(temp);
+  }
+}
+
+
+
+//ANIMATION HERE_ANIMATION HERE_ANIMATION HERE_ANIMATION HERE
 function draw() {
- if (alive) {
+ background(51);
+
+ if (alive&&!pause) {
 
   heroAction();
   textInfo();
@@ -234,7 +294,7 @@ function draw() {
   for (var m = 0; m < activeMagbuffer.length; m++) {
    if (activeMagbuffer[m]) {
     activeMagbuffer[m].display();
-    if (hero.intersectsII(activeMagbuffer[m])) {
+    if (hero.intersectsII(activeMagbuffer[m]) && ammo.length == 0) {
      loadAmmo(9);
      activeMagbuffer[m] = null;
 
@@ -253,16 +313,13 @@ function draw() {
   <!-- DRAW BULLETS -->
   for (var b = 0; b < bullets.length; b++) {
 
+   if (bullets[b]) {
+    bullets[b].update();
+    bullets[b].show();
+    if (bullets[b].outOffScreen()) bullets.splice(b, 1);
 
-   bullets[b].update();
-   bullets[b].show();
-
-
-   if (bullets[b].pos.x < 0 || bullets[b].pos.x > width ||
-    bullets[b].pos.y < 0 || bullets[b].pos.y > height) {
-    bullets.splice(b, 1);
-    //print(bullets.length)
    }
+
   }
 
   //zombieAtack();
@@ -279,19 +336,18 @@ function draw() {
 
     zombies[a].update();
     zombies[a].display();
-    if (hero.intersects(zombies[a])) {
-     // print("killed");
-     //alive = false;
-    }
     if (zombies[a].detectHero(hero)) {
      zombies[a].attack(hero);
-     //print(zombies[a] + "attacking")
+     zombies[a].beAgressive_speedUp();
+     if (zombies[a].intersects(hero)) {
+      //print("killed");
+      //alive = false;
+     }
     }
-    if (zombies[a].x > width ||
-
-     zombies[a].y < 0 || zombies[a].y > height) {
+    if (!zombies[a].onScr ||  zombies[a].useless) {
      zombies.splice(a, 1);
-     zombies.push(new Zombie(10 - random(width), random(height)));
+     print(zombies.length);
+     zombies.push(new Zombie(random(-800,0), random(height),random(0,0.05),0.5));
     }
    }
 
@@ -299,12 +355,17 @@ function draw() {
    for (var j = 0; j < bullets.length; j++) {
 
 
-    if (bullets[j] && a != j && zombies[a].intersects(bullets[j])) {
+    if (bullets[j] && a != j && bullets[j].intersects(zombies[a])) {
      // print("now");
      zombiesKilled += 1;
-     zombies.splice(a, 1);
-     zombies.push(new Zombie(100 - random(width), random(height)));
-     //print(zombies.length);
+     zombies[a].die_disapear = true;
+     if(zombies[a].life_opacity <=0){
+
+       zombies.splice(a, 1);
+       zombies.push(new Zombie(random(-100), random(height),random(0,0.05),0.5));
+
+     }
+
      bullets.splice(j, 1);
 
      // print(zombies.length);
@@ -313,25 +374,25 @@ function draw() {
 
   }
 
- } else dieMenu();
+} //else dieMenu();             //Deathscreen after Zombie won
 
 }
 /*
     stroke(255);
     line(hero.x, hero.y, mouseX, mouseY);
- 
+
     /*
     if(ball.x > width || ball.x < 0){
      ball.xspeed = ball.xspeed * -1;
-     
+
     }
     if(ball.y > height || ball.y < 0){
      ball.yspeed = ball.yspeed * -1;
-     
+
     }
     ball.x = ball.x + ball.xspeed;
     ball.y = ball.y + ball.yspeed;
-     
+
     */
 
 

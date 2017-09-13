@@ -1,13 +1,22 @@
 function Bullet(x, y, veloX, veloY) {
-    this.pos = createVector(x, y);
+    this.x = x; //tried to omit the pos.x by intersections
+    this.y = y;
+    this.pos = createVector(this.x, this.y);
     this.vel = createVector(veloX, veloY);
-    this.acc = createVector(0, 10);
+    this.acc = createVector(0, );
     this.radius = 1;
 
 
     //this.mag = mag();
     //this.heading = heading();
+    this.outOffScreen = function () {
+        if (this.pos.x < 0 || this.pos.x > width ||
+            this.pos.y < 0 || this.pos.y > height) {
+            return true;
 
+        }
+        return false;
+    }
     this.applyForce = function () {
         this.acc.add(force);
     }
