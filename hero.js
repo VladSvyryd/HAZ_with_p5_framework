@@ -35,7 +35,7 @@ function Hero(x, y, radius, safe) {
         } else if (this.x >= width - this.radius) {
             this.x = width - this.radius;
         }
-        if (this.x <= 0 + this.radius) {
+        else if (this.x <= 0 + this.radius) {
             this.x = 0 + this.radius;
         }
     }
