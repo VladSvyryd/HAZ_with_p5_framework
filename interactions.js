@@ -7,7 +7,7 @@ class Interactions() {
         print("123");
     }
 
-    moveRight(speedo) {
+    this.moveRight(speedo) {
 
         this.x = this.x + speedo;
         this.safe += 0.5;

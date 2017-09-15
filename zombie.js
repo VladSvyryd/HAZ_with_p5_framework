@@ -14,18 +14,18 @@ function Zombie(x, y,yspeed,xspeed) {
     this.b = random(255);
     this.radius = 20;
     this.detected;
-    this.onScr ;
+    this.onScr;
     this.useless = false;
-    this.die_disapear = false;
-    if(this.x >0 && this.x < width ){
-      this.onScr = true;
-    }
+    //if(this.x >0 && this.x < width ){
+      //this.onScr = true;
+    //}
 
 
 
 
     this.beAgressive_speedUp = function(){
-      this.movingSpeed += 0.005;
+      this.movingSpeed += 0.001;
+
     }
     this.display = function () {
 
@@ -57,10 +57,15 @@ function Zombie(x, y,yspeed,xspeed) {
             this.y += this.yspeed  +random(-0.2, 0.2) ;
             this.x += this.xspeed + random(-0.2, 0.2) ;
         }
-        if(this.die_disapear){
-          this.life_opacity -= 25;
+        if(this.useless){
+           this.y= this.y;
+           this.x =this.x;
+           this.life_opacity -= 25;
+
         }
         this.onScreen();
+
+        
 
 
         /*
@@ -90,7 +95,7 @@ function Zombie(x, y,yspeed,xspeed) {
 
 
         if (d < this.radius + obj.safe / 2) {
-            this.detected = true;
+           
             return true;
 
         } else {
