@@ -10,7 +10,7 @@ function Hero(x, y, radius, safe) {
     this.g = 127;
     this.b = 255;
     this.radius = radius;
-    this.safe = safe
+    this.safe = safe;
     this.moving = false;
 
 
@@ -95,7 +95,7 @@ function Hero(x, y, radius, safe) {
 
     this.safeZone = function () {
 
-        fill(255, 0, 0, 20);
+        fill(255, 0, 0, 10);
         ellipse(this.x, this.y, this.safe + random(-2, 2), this.safe + random(-2, 2));
     };
     this.safeZoneIncrease = function (size) {

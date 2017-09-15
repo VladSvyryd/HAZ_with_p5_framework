@@ -2,7 +2,7 @@ var gravity = 0.1;
 
 
 function Zombie(x, y,yspeed,xspeed) {
-
+    this.beAgressive_sound = loadSound("sounds/beAgressive.mp3");
     this.x = x;
     this.y = y;
     this.life_opacity =255;
@@ -16,6 +16,7 @@ function Zombie(x, y,yspeed,xspeed) {
     this.detected;
     this.onScr;
     this.useless = false;
+    this.timeToScream
     //if(this.x >0 && this.x < width ){
       //this.onScr = true;
     //}
@@ -24,7 +25,9 @@ function Zombie(x, y,yspeed,xspeed) {
 
 
     this.beAgressive_speedUp = function(){
+      
       this.movingSpeed += 0.001;
+     
 
     }
     this.display = function () {
@@ -46,7 +49,9 @@ function Zombie(x, y,yspeed,xspeed) {
         this.onScr = false;
       }
     }
+    this.Scream = function (){
 
+    }
 
 
 
@@ -64,7 +69,9 @@ function Zombie(x, y,yspeed,xspeed) {
 
         }
         this.onScreen();
-
+        if(this.detected){
+            this.playScream = true;
+        }
         
 
 
@@ -91,19 +98,30 @@ function Zombie(x, y,yspeed,xspeed) {
     };
     this.detectHero = function (obj) {
 
+       
+        
+
         var d = dist(this.x, this.y, obj.x, obj.y);
 
 
         if (d < this.radius + obj.safe / 2) {
-           
+           if(!this.detected){
+            this.beAgressive_sound.setVolume(0.1);
+            this.beAgressive_sound.play();
+           }
+           this.detected = true;
+
+          
             return true;
 
         } else {
-            this.detected = false;
+            
             return false;
         }
+        
 
     };
+
 
 
 

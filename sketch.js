@@ -13,6 +13,7 @@ var activeMagbuffer = [];
 var zombiesKilled = 0;
 var timeCounter =0;
 var All_zombies_in =0;
+var picsBuffer = [];
 
 function setup() {
  createCanvas(1200, 720);
@@ -22,7 +23,7 @@ function setup() {
  hero = new Hero(width / 2, height / 2, 20, 80);
  zombieSetter(60,0,-600,random(0,0.05),0.5);
  zombieSetter(80,width,width+600,-0.05,-0.5);
- ammoPacksPreload(5);
+ ammoPacksPreload(2);
  getAmmoOnStart(13);
  print(ammo.length);
  //angleMode(DEGREES);#
@@ -39,6 +40,7 @@ function pauseOn(){
 function restart(){
   pause = false;
 }
+
 
 //Set_A_Start_AmmoPacks_Amount
 function ammoPacksPreload(size) {
@@ -75,12 +77,12 @@ function getAmmoOnStart(bullet) {
 }
 
 //Sound Preload/ /
-/*
+
 function preload() {
  shotSound = loadSound("sounds/FNP45.1.mp3");
  emptyMag = loadSound("sounds/Dry_Fire_006.mp3");
 }
-*/
+
 
 //  Fire the bullets by sending them from the AmmoArray into BulletsArray
 function fire() {
@@ -90,7 +92,7 @@ function fire() {
  var dirX = (lenX / l) * 12;
  var dirY = (lenY / l) * 12;
  if (ammo.length != 0) {
-//  shotSound.play();
+  shotSound.play();
   hero.safeZoneIncrease(20);
   var dsd = ammo.pop();
   dsd.pos = createVector(hero.x, hero.y);
@@ -307,7 +309,7 @@ function draw() {
   for (var m = 0; m < activeMagbuffer.length; m++) {
    if (activeMagbuffer[m]) {
     activeMagbuffer[m].display();
-    print(ammo.length);
+    
   
    }
  }
