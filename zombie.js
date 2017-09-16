@@ -25,9 +25,9 @@ function Zombie(x, y,yspeed,xspeed) {
 
 
     this.beAgressive_speedUp = function(){
-      
+
       this.movingSpeed += 0.001;
-     
+
 
     }
     this.display = function () {
@@ -72,7 +72,7 @@ function Zombie(x, y,yspeed,xspeed) {
         if(this.detected){
             this.playScream = true;
         }
-        
+
 
 
         /*
@@ -98,27 +98,27 @@ function Zombie(x, y,yspeed,xspeed) {
     };
     this.detectHero = function (obj) {
 
-       
-        
+
+
 
         var d = dist(this.x, this.y, obj.x, obj.y);
 
 
-        if (d < this.radius + obj.safe / 2) {
+        if (d < this.radius + obj.save / 2) {
            if(!this.detected){
             this.beAgressive_sound.setVolume(0.1);
             this.beAgressive_sound.play();
            }
            this.detected = true;
 
-          
+
             return true;
 
         } else {
-            
+
             return false;
         }
-        
+
 
     };
 

@@ -93,7 +93,7 @@ function fire() {
  var dirY = (lenY / l) * 12;
  if (ammo.length != 0) {
   shotSound.play();
-  hero.safeZoneIncrease(20);
+  hero.saveZoneIncrease(20);
   var dsd = ammo.pop();
   dsd.pos = createVector(hero.x, hero.y);
   dsd.vel = createVector(dirX, dirY);
@@ -237,18 +237,18 @@ function heroAction() {
  hero.display();
  hero.check();
  for (var i = 0; i < activeMagbuffer.length; i++) {
-   
+
   if(activeMagbuffer[i]){
   if (hero.intersectsII(activeMagbuffer[i])) {
            if (ammo.length >= 0) {
 
             activeMagbuffer[i] = null;
             loadAmmo(9);
-            
+
         }else{
       fill(255,0,0);
       text("Rounds:" + ammo.length, width - 190, height - 40);
-      
+
     }
     }
 }
@@ -309,12 +309,12 @@ function draw() {
   for (var m = 0; m < activeMagbuffer.length; m++) {
    if (activeMagbuffer[m]) {
     activeMagbuffer[m].display();
-    
-  
+
+
    }
  }
 
-  
+
 
 
 
@@ -371,7 +371,7 @@ function draw() {
     if (bullets[j] && a != j && bullets[j].intersects(zombies[a]) ) {
      zombies[a].useless = true;
      // print("now");
-     zombiesKilled += 1; 
+     zombiesKilled += 1;
      if(zombies[a].life_opacity <=0){
        zombies.splice(a, 1);
        zombies.push(new Zombie(random(-100), random(height),random(0,0.05),0.5));

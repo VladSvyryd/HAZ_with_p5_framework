@@ -1,8 +1,8 @@
 var gravity = 0.2;
 
 
-function Hero(x, y, radius, safe) {
-
+class Hero {
+    constructor(x, y, radius, save){
     this.x = x;
     this.y = y;
     this.yspeed = 0;
@@ -10,24 +10,26 @@ function Hero(x, y, radius, safe) {
     this.g = 127;
     this.b = 255;
     this.radius = radius;
-    this.safe = safe;
+    this.save = save;
+    this.saveStart = save;
     this.moving = false;
 
+}
 
-
-    this.display = function () {
+    display() {
 
         fill(this.r, this.g, this.b);
         noStroke();
         ellipse(this.x, this.y, this.radius, this.radius);
-        this.safeZone();
-        if (this.moving == false && this.safe > safe) {
-            this.safe -= 0.5;
+        this.saveZone();
+        if (this.moving == false && this.save >= this.saveStart) {
+            this.save -= 0.5;
+
         }
 
     }
 
-    this.check = function () {
+    check() {
         if (this.y >= height - this.radius) {
             this.y = height - this.radius;
         } else if (this.y <= 0 + this.radius) {
@@ -39,29 +41,29 @@ function Hero(x, y, radius, safe) {
             this.x = 0 + this.radius;
         }
     }
-    this.moveRight = function (speedo) {
+    moveRight(speedo) {
 
         this.x = this.x + speedo;
-        this.safe += 0.5;
+        this.save += 0.5;
         this.moving = true;
     }
-    this.moveLeft = function (speedo) {
+    moveLeft(speedo) {
 
         this.x = this.x - speedo;
-        this.safe += 0.5;
+        this.save += 0.5;
         this.moving = true;
     }
-    this.moveUp = function (speedo) {
+    moveUp(speedo) {
         this.y = this.y - speedo;
-        this.safe += 0.5;
+        this.save += 0.5;
         this.moving = true;
     }
-    this.moveDown = function (speedo) {
+    moveDown(speedo) {
         this.y = this.y + speedo;
-        this.safe += 0.5;
+        this.save += 0.5;
         this.moving = true;
     }
-    this.intersects = function (obje) {
+    intersects(obje) {
 
         var d = dist(this.x, this.y, obje.x, obje.y);
 
@@ -75,7 +77,7 @@ function Hero(x, y, radius, safe) {
         }
 
     };
-    this.intersectsII = function (obj) {
+    intersectsII(obj) {
 
         var d = dist(this.x, this.y, obj.x, obj.y);
 
@@ -93,13 +95,14 @@ function Hero(x, y, radius, safe) {
 
 
 
-    this.safeZone = function () {
+    saveZone() {
 
         fill(255, 0, 0, 10);
-        ellipse(this.x, this.y, this.safe + random(-2, 2), this.safe + random(-2, 2));
+        ellipse(this.x, this.y, this.save + random(-2, 2), this.save + random(-2, 2));
     };
-    this.safeZoneIncrease = function (size) {
-        this.safe += size;
+    saveZoneIncrease(size) {
+        this.moving= false;
+        this.save += size;
     };
 
 }
